@@ -81,6 +81,12 @@ class Utilisateur(AbstractBaseUser,PermissionsMixin):
 
     ville=models.CharField(max_length=50,
                            blank=False,
+                           validators=[
+                               RegexValidator(
+                                   regex=r"^[a-zA-Zà-ÿÀ-ß\s\(\)'-]+$",
+                                   message="Le nom de la ville contient des caractères non autorisés."
+                               )
+                           ],
                            verbose_name="Ville",
                            )
 

@@ -14,7 +14,7 @@ def utilisateur_cree(db):
         nom="Adrien",
         adresse="16 rue Jules Védrines",
         cp="26140",
-        ville="Saint Rembert d'Albon",
+        ville="Saint Rambert d'Albon",
     )
 
 def test_modele_Utilisateur_date_de_creation(utilisateur_cree):
@@ -102,7 +102,7 @@ def test_modele_Utilisateur_email_vide(utilisateur_cree):
 def test_modele_Utilisateur_email_en_doublon(utilisateur_cree):
     utilisateur_doublon = Utilisateur(
         email="thomas.adrien.ta@gmail.com",
-        password="AutrePassword123!",
+        password="mOTdEpASSE654321!",
         civilite=Utilisateur.Civilite.MADAME,
         prenom="Valentine",
         nom="Schu",
@@ -176,13 +176,36 @@ def test_modele_complement_vide(utilisateur_cree):
     utilisateur_cree.complement=""
     assert utilisateur_cree.complement==""
 
+def test_modele_Utilisateur_ville_lettre_uniquement(utilisateur_cree):
+    utilisateur_cree.ville="Clamecy"
+    assert utilisateur_cree.ville=="Clamecy"
+
+def test_modele_Utilisateur_ville_avec_espace_tiret_apostrophe(utilisateur_cree):
+    utilisateur_cree.ville="Saint-Rambert d'Albon"
+    assert utilisateur_cree.ville=="Saint-Rambert d'Albon"
+
+def test_modele_Utilisateur_ville_accent_cedille_(utilisateur_cree):
+    utilisateur_cree.ville="Saint François de l'Isère"
+    assert utilisateur_cree.ville=="Saint François de l'Isère"
+
+def test_modele_Utilisateur_ville_parenthese(utilisateur_cree):
+    utilisateur_cree.ville="Mantaille (commune d'Anneyron)"
+    assert utilisateur_cree.ville=="Mantaille (commune d'Anneyron)"
+
+def test_modele_Utilisateur_ville_non_valide(utilisateur_cree):
+    utilisateur_cree.ville="Saint Rambert d'Albon 456"
+    with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
+
+def test_modele_Utilisateur_ville_vide(utilisateur_cree):
+    utilisateur_cree.ville=""
+    with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
+
+
+
 
 """
--ville lettre uniquement
--ville complexe
--ville caractères spéciaux français
--ville non-valide
--ville vide
 -mdp valide
 -mdp – 8 caractères
 -mdp sans lettre
