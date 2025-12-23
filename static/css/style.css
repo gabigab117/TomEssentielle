@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root{
+    --bs-bleu:#1e847f;
+    --bs-beige:#ecc19c;
+    --bs-blanc:#ffffff;
+    --bs-noir:#000000;
+    --bs-danger:#ff0000;
+    --principale:Open Sans, sans-serif;
+    --secondaire:Kalam,cursive;
+}
+html{
+    font-family: var(--principale);
+    color: var(--bs-blanc);
+    box-sizing: border-box;
+    height:100%;
+    font-size:1rem;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body{
+    margin: 0;
+    border:0;
+    overflow-x: hidden;
+    background-color: var(--bs-bleu);
+}
+
+.logo{
+    height: auto;
+    width: 15rem;
+    margin-top:1rem ;
+}
+
+.slogan,
+.entreprise{
+    color: var(--bs-blanc);
+    font-family: var(--secondaire);
+    font-weight: 700;
+}
+
+.slogan{
+    font-size: 1.5rem;
+}
+
+a,
+a:hover,
+.adresse {
+    text-decoration: none;
+    color:var(--bs-blanc);
+}
+a:hover{
+    font-weight: 700;
+}
+
+.milieu{
+    background-color: var(--bs-beige);
+}
+
+.btn{
+    font-weight:700;
+    font-size: 1rem;
+    border-radius: 1.5625rem;
+    border: 0.125rem solid;
+    margin: 0.5rem;
+}
+
+.btn-custom{
+    background-color: var(--bs-bleu);
+    color: var(--bs-blanc);
+    border-color: var(--bs-bleu);
+}
+
+.btn-custom:hover{
+    background-color: var(--bs-blanc);
+    color: var(--bs-bleu);
+}
+
+.btn-danger{
+    background-color: var(--bs-danger);
+    color: var(--bs-blanc);
+    border-color: var(--bs-danger);
+}
+
+.btn-danger:hover{
+    background-color: var(--bs-blanc);
+    color: var(--bs-danger);
+    border-color: var(--bs-danger);
+}
+
+.entreprise{
+    font-size: 1.2rem;
+}
+.copy{
+    background-color: var(--bs-blanc);
+}
