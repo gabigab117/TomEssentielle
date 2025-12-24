@@ -5,19 +5,6 @@ from django.core.exceptions import ValidationError
 from utilisateur.models import Utilisateur
 import pytest
 
-@pytest.fixture
-def utilisateur_cree(db):
-    return Utilisateur.objects.create_user(
-        email="thomas.adrien.ta@gmail.com",
-        password="MotDePasse123456@",
-        civilite=Utilisateur.Civilite.MONSIEUR,
-        prenom="Thomas",
-        nom="Adrien",
-        adresse="16 rue Jules Védrines",
-        cp="26140",
-        ville="Saint Rambert d'Albon",
-    )
-
 def test_modele_Utilisateur_date_de_creation(utilisateur_cree):
     assert utilisateur_cree.creation is not None
 
