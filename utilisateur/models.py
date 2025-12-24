@@ -16,9 +16,15 @@ class ManagerUtilisateur (BaseUserManager):
         return user
 
     def create_superuser(self,email,password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
         user=self.create_user(email=email,password=password,**extra_fields)
-        user.is_staff=True
-        user.is_superuser=True
         user.save()
         return user
 
@@ -131,5 +137,20 @@ class Utilisateur(AbstractBaseUser,PermissionsMixin):
 
     def clean(self):
         super().clean()
-        if self.email:
+        if self.email and isinstance(self.email, str):
             self.email = self.email.lower().strip()
+        if self.nom and isinstance(self.nom, str):
+            self.nom = self.nom.strip()
+            if not self.nom:
+                raise ValidationError({'nom': "Ce champ est obligatoire."})
+        if self.prenom and isinstance(self.prenom, str):
+            self.prenom = self.prenom.strip()
+            if not self.prenom:
+                raise ValidationError({'prenom': "Ce champ est obligatoire."})
+        if self.ville and isinstance(self.ville, str):
+            self.ville = self.ville.strip()
+            if not self.ville:
+                raise ValidationError({'ville': "Ce champ est obligatoire."})
+
+    def __str__(self):
+        return f"{self.civilite} {self.prenom.capitalize()} {self.nom.upper()}"

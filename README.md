@@ -182,9 +182,11 @@ VISITEUR PUBLIC
        * civilité vide
        * nom valide
        * nom + 30 caractères
+       * nom avec espace avant et après
        * nom vide
        * prénom valide
        * prénom + 30 caractères
+       * prénom avec espace avant et après
        * prénom vide
        * adresse rempli
        * adresse vide
@@ -208,5 +210,8 @@ VISITEUR PUBLIC
        * is_active, is_staff, is_superuser pour create user
        * is_active, is_staff, is_superuser pour create superuser
        * tentative et date blocage création du compte
+       * creatuser si pas email
+       * createuser enregistrement champs non obligatoires
+       * code non modifie en cas de mise à jour
  
 9)  

@@ -168,6 +168,11 @@ def test_modele_Utilisateur_nom_plus_de_30_caracteres(utilisateur_cree):
     with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
 
+def test_modele_Utilisateur_nom_avec_espaces_avant_et_apres(utilisateur_cree):
+    utilisateur_cree.nom = "  Adrien  "
+    utilisateur_cree.clean()
+    assert utilisateur_cree.nom == "Adrien"
+
 def test_modele_Utilisateur_nom_vide(utilisateur_cree):
     utilisateur_cree.nom=""
     with pytest.raises(ValidationError):
@@ -180,6 +185,11 @@ def test_modele_Utilisateur_prenom_plus_de_30_caracteres(utilisateur_cree):
     utilisateur_cree.prenom="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
+
+def test_modele_Utilisateur_prenom_avec_espaces_avant_et_apres(utilisateur_cree):
+    utilisateur_cree.nom = "  Thomas  "
+    utilisateur_cree.clean()
+    assert utilisateur_cree.nom == "Thomas"
 
 def test_modele_Utilisateur_prenom_vide(utilisateur_cree):
     utilisateur_cree.prenom=""
@@ -226,6 +236,11 @@ def test_modele_Utilisateur_ville_non_valide(utilisateur_cree):
 def test_modele_Utilisateur_ville_plus_de_50_caractères(utilisateur_cree):
     utilisateur_cree.ville="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
+
+def test_modele_Utilisateur_ville_espace_uniquement(utilisateur_cree):
+    utilisateur_cree.ville="   "
+    with pytest.raises(NameError):
         utilisateur_cree.full_clean()
 
 def test_modele_Utilisateur_ville_vide(utilisateur_cree):
@@ -296,3 +311,34 @@ def test_modele_Utilisateur_is_active_is_staff_is_superuser_create_superuser(db)
 def test_modele_Utilisateur_nombre_tentative_et_date_blocage_initiale(utilisateur_cree):
     assert utilisateur_cree.tentative==0
     assert utilisateur_cree.blocage==None
+
+def test_modele_Utilisateur_create_user_si_pas_email(db):
+    with pytest.raises(ValueError, match="L'adresse e-mail est obligatoire"):
+        Utilisateur.objects.create_user(email="", password="password")
+
+def test_manager_create_user_enregistremennt_champs_non_obligatoires(db):
+    user = Utilisateur.objects.create_user(
+        email="test.extra@gmail.com",
+        password="Password123!",
+        civilite=Utilisateur.Civilite.MONSIEUR,
+        prenom="Jean",
+        nom="Dupont",
+        adresse="1 rue test",
+        cp="75000",
+        ville="Paris",
+        tel="0601020304" # Champ supplémentaire
+    )
+    assert user.tel == "0601020304"
+
+def test_modele_Utilisateur_code_non_modifie_mis_a_jour_utilisateur(utilisateur_cree):
+    code_original = utilisateur_cree.code
+    utilisateur_cree.nom = "NouveauNom"
+    utilisateur_cree.save()
+    
+    utilisateur_modifie = Utilisateur.objects.get(pk=utilisateur_cree.pk)
+    assert utilisateur_modifie.nom == "NouveauNom"
+    assert utilisateur_modifie.code == code_original
+
+def test_modele_Utilisateur_str(utilisateur_cree):
+    assert str(utilisateur_cree) == "M Thomas ADRIEN"
+
