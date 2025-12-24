@@ -29,6 +29,21 @@ def test_modele_Utilisateur_creation_code_utilisateur(utilisateur_cree):
     assert utilisateur_cree.code.endswith("0001")
     assert utilisateur_cree.code==f"ID-{date}-0001"
 
+def test_modele_Utilisateur_incrementation_code_utilisateur(db,utilisateur_cree):
+    utilisateur1=utilisateur_cree
+    utilisateur2=Utilisateur.objects.create_user(
+        email="tom.essentielle@gmail.com",
+        password="MotDePasse123456@",
+        civilite=Utilisateur.Civilite.ENTREPRISE,
+        prenom="Test",
+        nom="Tom Essentielle",
+        adresse="30 rue de Montailloud",
+        cp="38150",
+        ville="Salaise-sur-Sanne",
+    )
+    assert utilisateur1.code!=utilisateur2.code
+    assert utilisateur2.code.endswith("0002")
+
 def test_modele_Utilisateur_creation_slug(utilisateur_cree):
     maintenant=timezone.now()
     date=f"{maintenant.month:02d}{maintenant.year}"
@@ -145,16 +160,26 @@ def test_modele_Utilisateur_civilite_vide(utilisateur_cree):
     with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
 
-def test_modele_Utilisateur_nom_rempli(utilisateur_cree):
+def test_modele_Utilisateur_nom_valide(utilisateur_cree):
     assert utilisateur_cree.nom=="Adrien"
+
+def test_modele_Utilisateur_nom_plus_de_30_caracteres(utilisateur_cree):
+    utilisateur_cree.nom="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+    with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
 
 def test_modele_Utilisateur_nom_vide(utilisateur_cree):
     utilisateur_cree.nom=""
     with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
 
-def test_modele_Utilisateur_prenom_rempli(utilisateur_cree):
+def test_modele_Utilisateur_prenom_valide(utilisateur_cree):
     assert utilisateur_cree.prenom=="Thomas"
+
+def test_modele_Utilisateur_prenom_plus_de_30_caracteres(utilisateur_cree):
+    utilisateur_cree.prenom="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+    with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
 
 def test_modele_Utilisateur_prenom_vide(utilisateur_cree):
     utilisateur_cree.prenom=""
@@ -195,6 +220,11 @@ def test_modele_Utilisateur_ville_parenthese(utilisateur_cree):
 
 def test_modele_Utilisateur_ville_non_valide(utilisateur_cree):
     utilisateur_cree.ville="Saint Rambert d'Albon 456"
+    with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
+
+def test_modele_Utilisateur_ville_plus_de_50_caractères(utilisateur_cree):
+    utilisateur_cree.ville="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
 

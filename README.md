@@ -157,6 +157,7 @@ VISITEUR PUBLIC
        * Fixture utilisateur_cree
        * creation date
        * creation code utilisateur
+       * Incrémentation code utilisateur
        * creation slug
        * tel valide
        * tel – 10 chiffres
@@ -179,9 +180,11 @@ VISITEUR PUBLIC
        * civilité entreprise
        * civilité invalide
        * civilité vide
-       * nom rempli
+       * nom valide
+       * nom + 30 caractères
        * nom vide
-       * prénom rempli
+       * prénom valide
+       * prénom + 30 caractères
        * prénom vide
        * adresse rempli
        * adresse vide
@@ -191,6 +194,7 @@ VISITEUR PUBLIC
        * ville complexe
        * ville caractères spéciaux français
        * ville non-valide
+       * ville + 50 caractères
        * ville vide
        * mdp valide
        * mdp pas enregistré en clair
