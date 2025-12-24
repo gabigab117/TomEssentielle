@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import sys
 from pathlib import Path
 from oscar.defaults import *
 import environ
@@ -255,3 +255,8 @@ OSCAR_USER_MODEL=AUTH_USER_MODEL
 OSCAR_ACCOUNTS_REDIRECT_ON_LOGIN = '/'
 
 AUTH_USER_MODEL="utilisateur.Utilisateur"
+
+if 'test' in sys.argv or 'pytest' in sys.modules:
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    ]
