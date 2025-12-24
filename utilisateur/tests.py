@@ -240,7 +240,7 @@ def test_modele_Utilisateur_ville_plus_de_50_caractères(utilisateur_cree):
 
 def test_modele_Utilisateur_ville_espace_uniquement(utilisateur_cree):
     utilisateur_cree.ville="   "
-    with pytest.raises(NameError):
+    with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
 
 def test_modele_Utilisateur_ville_vide(utilisateur_cree):
@@ -308,6 +308,22 @@ def test_modele_Utilisateur_is_active_is_staff_is_superuser_create_superuser(db)
     assert admin.is_staff==True
     assert admin.is_superuser==True
 
+def test_manager_create_superuser_erreur_si_pas_is_staff(db):
+    with pytest.raises(ValueError, match='Superuser must have is_staff=True.'):
+        Utilisateur.objects.create_superuser(
+            email="admin@test.com",
+            password="password",
+            is_staff=False
+        )
+
+def test_manager_create_superuser_erreur_si_pas_is_superuser(db):
+    with pytest.raises(ValueError, match='Superuser must have is_superuser=True.'):
+        Utilisateur.objects.create_superuser(
+            email="admin@test.com",
+            password="password",
+            is_superuser=False
+        )
+
 def test_modele_Utilisateur_nombre_tentative_et_date_blocage_initiale(utilisateur_cree):
     assert utilisateur_cree.tentative==0
     assert utilisateur_cree.blocage==None
@@ -341,4 +357,3 @@ def test_modele_Utilisateur_code_non_modifie_mis_a_jour_utilisateur(utilisateur_
 
 def test_modele_Utilisateur_str(utilisateur_cree):
     assert str(utilisateur_cree) == "M Thomas ADRIEN"
-
