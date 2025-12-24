@@ -193,6 +193,7 @@ VISITEUR PUBLIC
        * ville non-valide
        * ville vide
        * mdp valide
+       * mdp pas enregistré en clair
        * mdp – 8 caractères
        * mdp sans lettre
        * mdp sans chiffre
@@ -202,5 +203,6 @@ VISITEUR PUBLIC
        * mdp vide
        * is_active, is_staff, is_superuser pour create user
        * is_active, is_staff, is_superuser pour create superuser
+       * tentative et date blocage création du compte
  
 9)  

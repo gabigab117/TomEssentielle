@@ -122,7 +122,7 @@ class Utilisateur(AbstractBaseUser,PermissionsMixin):
             self.creation=timezone.now()
             annee=self.creation.year
             mois=f"{self.creation.month:02d}"
-            compteur=Utilisateur.objects.filter(code__startswith=f"ID-{annee}").count()+1
+            compteur=Utilisateur.objects.filter(creation__year=annee).count()+1
 
             self.code=f"ID-{mois}{annee}-{compteur:04d}"
             self.slug=slugify(self.code)

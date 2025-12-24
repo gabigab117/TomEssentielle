@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
@@ -202,18 +203,66 @@ def test_modele_Utilisateur_ville_vide(utilisateur_cree):
     with pytest.raises(ValidationError):
         utilisateur_cree.full_clean()
 
+def test_modele_Utilisateur_mdp_valide(utilisateur_cree):
+    validate_password(utilisateur_cree.password)
+    assert utilisateur_cree.check_password("MotDePasse123456@")
 
+def test_modele_Utilisateur_mdp_pas_enregistre_en_clair(utilisateur_cree):
+    assert utilisateur_cree.password!="MotDePasse123456@"
 
+def test_modele_Utilisateur_mdp_moins_de_8_caractere(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("Mdp12@")
 
-"""
--mdp valide
--mdp – 8 caractères
--mdp sans lettre
--mdp sans chiffre
--mdp sans caractères spécial
--mdp sans maj
--mdp sans min
--mdp vide
--is_active, is_staff, is_superuser pour create user
--is_active, is_staff, is_superuser pour create superuser
-"""
+def test_modele_Utilisateur_mdp_sans_lettre(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("12345678@")
+
+def test_modele_Utilisateur_mdp_sans_chiffre(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("MotDePasse@")
+
+def test_modele_Utilisateur_mdp_sans_caractere_special(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("MotDePasse12345678")
+
+def test_modele_Utilisateur_mdp_sans_maj(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("motdepasse123456@")
+
+def test_modele_Utilisateur_mdp_sans_min(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("MOTDEPASSE123456@")
+
+def test_modele_Utilisateur_mdp_commun(utilisateur_cree):
+    with pytest.raises(ValidationError):
+        validate_password("password")
+
+def test_modele_Utilisateur_mdp_vide(utilisateur_cree):
+    utilisateur_cree.password=""
+    with pytest.raises(ValidationError):
+        utilisateur_cree.full_clean()
+
+def test_modele_Utilisateur_is_active_is_staff_is_superuser_create_user(utilisateur_cree):
+    assert utilisateur_cree.is_active==True
+    assert utilisateur_cree.is_staff==False
+    assert utilisateur_cree.is_superuser==False
+
+def test_modele_Utilisateur_is_active_is_staff_is_superuser_create_superuser(db):
+    admin=Utilisateur.objects.create_superuser(
+        email="thomas.adrien.ta@gmail.com",
+        password="MotDePasse123456@",
+        civilite=Utilisateur.Civilite.MONSIEUR,
+        prenom="Thomas",
+        nom="Adrien",
+        adresse="16 rue Jules Védrines",
+        cp="26140",
+        ville="Saint Rambert d'Albon",
+    )
+    assert admin.is_active==True
+    assert admin.is_staff==True
+    assert admin.is_superuser==True
+
+def test_modele_Utilisateur_nombre_tentative_et_date_blocage_initiale(utilisateur_cree):
+    assert utilisateur_cree.tentative==0
+    assert utilisateur_cree.blocage==None
